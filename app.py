@@ -21,16 +21,26 @@ def resize_image(input_dir, infile, output_dir='resized', size=(320, 180)):
 
 if __name__ == '__main__':
 
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--input_dir', help='Full Input Directory')
+    parser.add_argument('-o', '--output_dir', help='Full Output Directory')
+    args = parser.parse_args()
+
+    print(args)
+
+    if args.input_dir:
+        input_dir = args.input_dir
+    else:
+        input_dir = dir + '/images'
+
     output_dir = 'resized'
     dir = os.getcwd()
-    input_dir = 'images'
-    full_input_dir = dir + '/' + input_dir
 
     if not os.path.exists(os.path.join(dir, output_dir)):
         os.mkdir(output_dir)
 
     try:
-        for file in os.listdir(full_input_dir):
+        for file in os.listdir(input_dir):
             # print('file, {}'.format(file))
             resize_image(input_dir, file, output_dir)
     except OSError:
