@@ -1,56 +1,52 @@
 import os
-import argparse
 from PIL import Image
+import re
+import argparse
+from pathlib import Path
 
-DEFAULT_SIZE = (320, 180)
 
+def resize_image(input_dir, infile, output_dir='resized', size=(150, 0)):
 
-def resize_image(input_dir, infile, output_dir="resized", size=DEFAULT_SIZE):
-    outfile = os.path.splitext(infile)[0] + "_resized"
-    extension = os.path.splitext(infile)[1]
+    if '.DS_Store' in infile:
+        return
+
+    output_file = os.path.splitext(infile)[0]
+    exstension = os.path.splitext(infile)[1]
 
     try:
-        img = Image.open(input_dir + '/' + infile)
-        img = img.resize((size[0], size[1]), Image.LANCZOS)
+        img = Image.open(input_dir / infile)
+        referance_size = size[0]
+        widht = img.width
+        heigth = img.height
+        ratio = widht / heigth
+        referanced_heigth = referance_size / ratio
+        img = img.resize((referance_size, round(
+            referanced_heigth)), Image.LANCZOS)
 
-        new_file = output_dir + "/" + outfile + extension
-        img.save(new_file)
+        new_file = output_dir + '/' + output_file + exstension
+        rgb = img.convert('RGB')
+        rgb.save(output_dir + '/' + output_file + '.jpg')
+        # img.save(new_file)
+        print('image resized successfully')
     except IOError:
-        print("unable to resize image {}".format(infile))
+        print('unable to resize {}'.format(infile))
 
 
-if __name__ == "__main__":
-    dir = os.getcwd()
+if __name__ == '__main__':
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-i', '--input_dir', help='Full Input Path')
-    parser.add_argument('-o', '--output_dir', help='Full Output Path')
+    output_dir = 'resized'
+    dire = os.getcwd()
+    # folder = 'Vintage'
+    direc = f'/Users/kerimdeveci/Downloads/Calendar'
+    input_dir = 'images'
+    full_input_dir = dire + '/' + input_dir
 
-    parser.add_argument('-w', '--width', help='Resized Width')
-    parser.add_argument('-t', '--height', help='Resized Height')
-
-    args = parser.parse_args()
-
-    if args.input_dir:
-        input_dir = args.input_dir
-    else:
-        input_dir = dir + '/images'
-
-    if args.output_dir:
-        output_dir = args.output_dir
-    else:
-        output_dir = dir + '/resized'
-
-    if args.width and args.height:
-        size = (int(args.width), int(args.height))
-    else:
-        size = DEFAULT_SIZE
-
-    if not os.path.exists(os.path.join(dir, output_dir)):
-        os.mkdir(output_dir)
-
+    # if not os.path.exists(os.path.join(dire, output_dir)):
+    #     os.mkdir(output_dir)
+    pathl = Path(direc)
     try:
-        for file in os.listdir(input_dir):
-            resize_image(input_dir, file, output_dir, size=size)
+        for file in os.listdir(direc):
+            # print('file, {}'.format(file))
+            resize_image(pathl, file, direc)
     except OSError:
-        print('file not found')
+        print('File Not Found')
