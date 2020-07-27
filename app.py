@@ -25,7 +25,7 @@ def resize_image(input_dir, infile, output_dir='resized', size=(150, 0)):
 
         new_file = output_dir + '/' + output_file + exstension
         rgb = img.convert('RGB')
-        rgb.save(output_dir + '/' + output_file + '.jpg')
+        rgb.save(output_dir + '/' + output_file + '_t' + '.jpg')
         # img.save(new_file)
         print('image resized successfully')
     except IOError:
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     output_dir = 'resized'
     dire = os.getcwd()
     # folder = 'Vintage'
-    direc = f'/Users/kerimdeveci/Downloads/Calendar'
+    direc = f'/Users/kerimdeveci/Downloads/StaticImages'
     input_dir = 'images'
     full_input_dir = dire + '/' + input_dir
 
